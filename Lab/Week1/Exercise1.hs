@@ -43,6 +43,6 @@ exactlyTrueIn5 n xs = length (filter (==True) xs) /= n
 exactlyTrueIn6 :: Int -> [Bool] -> Bool
 exactlyTrueIn6 n xs = length (filter (==False) xs) == n
 
--- To fix
+
 --exactlyGivenIn :: (Eq a) -> Int -> a -> [a] -> Bool
---exactlyGivenIn n b xs = length (filter (==b) xs) == n
+exactlyGivenIn n b xs = length (filter (==b) xs) == n
