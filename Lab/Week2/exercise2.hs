@@ -33,4 +33,26 @@ forAllMapFilter f xs = length (filter (==True) (map f xs)) == length xs
 thereExistsMapFilter :: (a -> Bool) -> [a] -> Bool
 thereExistsMapFilter f xs = (filter (==True) (map f xs)) /= []
 
+-- Exercise 1
+
+-- Exercise 2
+
+-- Exercise 3
+
+-- Exercise 4
+
+-- Exercise 5
+
+-- Exercise 6
+
+-- Exercise 7
+
+-- Exercise 8
+
+-- Exercise 9 : Write a Line of code which doubles all of the Integers between 5 and 10 
+map (*2) [5..10]
+
+
+-- Exercise 10: Use map to square the first 20 integers.
+map (sqrt) [1..20]
 
