@@ -1,3 +1,18 @@
+{--
+    Exercise 1: 
+        filter even [1..10]
+        filter odd [1..50]
+
+--}
+
+
+{--
+    Exercise 2: 
+        forAllMapFilter isPrime [5..10] evaluates to False
+        thereExistsMapFilter isPrime [5..10] evaluates to True
+        forAllMapFilter odd (filter isPrime [1..10]) evaluates to False
+--}
+
 divides :: Int -> Int -> Bool
 divides m n = rem m n == 0
 
@@ -33,26 +48,52 @@ forAllMapFilter f xs = length (filter (==True) (map f xs)) == length xs
 thereExistsMapFilter :: (a -> Bool) -> [a] -> Bool
 thereExistsMapFilter f xs = (filter (==True) (map f xs)) /= []
 
--- Exercise 1
-
--- Exercise 2
 
 -- Exercise 3
+{--
+    [ x | x <- [30..50], odd x] 
+    [x | x <- [40..80], odd x, isPrime x]
+--}
+
 
 -- Exercise 4
+{--
+    thereExistsListComprehension (=='e') "So no-one told you life was gonna be this way." evaulates to True
+    forAllListComprehension even [10,20..190] evaluates to True 
+--}
+
 
 -- Exercise 5
+{--
+    map (subtract 1) (filter even [1..50]) 
+    filter (not.even) [1..50]
+--}
+
 
 -- Exercise 6
+{--
+    map (subtract 1) [x | x <- [1..50], even x]
+--}
+
 
 -- Exercise 7
+{--
+    last (filter isPrime [1..200])
+    last [x | x <- [1..200], isPrime x]
+--}
+
 
 -- Exercise 8
+{--
+    last (filter isPrime [1..200])
+    last [x | x <- [1..200], isPrime x]
+--}
+
 
 -- Exercise 9 : Write a Line of code which doubles all of the Integers between 5 and 10 
-map (*2) [5..10]
+--map (*2) [5..10]
 
 
 -- Exercise 10: Use map to square the first 20 integers.
-map (sqrt) [1..20]
+--map (^) [1..20]
 
