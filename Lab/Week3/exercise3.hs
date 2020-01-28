@@ -32,25 +32,27 @@ flipSign [] =
 flipSign (x:xs) = 
 -}
 
-{-
-addAtEnd :: a -> [a] -> [a]
-addAtEnd x [] =
-addAtEnd x (y:ys) = 
--}
 
-{-
+addAtEnd :: a -> [a] -> [a]
+addAtEnd x [] = [x]
+addAtEnd x (y:ys) = y : addAtEnd x ys 
+
+
+
 append :: [a] -> [a] -> [a]
-append [] ys = 
-append (x:xs) ys =
--}
+append [] ys = ys
+append (x:xs) ys = append xs (addAtEnd x ys)
 
 {-
 myReverse :: [a] -> [a]
 -}
 
-{- 
+-- Two tabs or it will probleably give error
 uniqueList :: (Eq a) => [a] -> [a]
--}
+uniqueList [] = []
+uniqueList (x:xs)
+        | elem x xs = uniqueList xs
+        | otherwise = x : uniqueList xs
 
 {-
 subset :: (Eq a) => [a] -> [a] -> Bool

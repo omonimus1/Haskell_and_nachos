@@ -43,14 +43,25 @@ addAtEnd x [] = [x]
 addAtEnd x (y:ys) = y : addAtEnd x ys 
 ```
 ## Exercise 9 
-(Harder) Write a function called append which takes two lists, and adds the first
+Write a function called append which takes two lists, and adds the first
 list to the end of the second. You might like to use your function addAtEnd. For example,
 append [1..5] [6..10] = [6,7,8,9,10,1,2,3,4,5].
 ```
+addAtEnd :: a -> [a] -> [a]
+addAtEnd x [] = [x]
+addAtEnd x (y:ys) = y : addAtEnd x ys 
+
+append :: [a] -> [a] -> [a]
+append [] ys = ys
+append (x:xs) ys = append xs (addAtEnd x ys)
 ```
 ## Exercise 10 
 (Harder) Write a function called myReverse which takes a list and reverses it. You might like to use your function addAtEnd.
+
 ```
+myReverse :: [a] -> [a]
+myReverse [] = []
+myReverse (x:xs) = addAtEnd x (myReverse xs)
 ```
 # Exercise 11
 Write a function which takes a list and returns the same list where all elements
@@ -59,6 +70,13 @@ in the remaining list (use the function elem) and only keep it if it does not ap
 signature you should use is:
 uniqueList :: (Eq a) => [a] -> [a]
 ```
+-- Two tabs or it will probleably give error
+uniqueList :: (Eq a) => [a] -> [a]
+uniqueList [] = []
+uniqueList (x:xs)
+        | elem x xs = uniqueList xs
+        | otherwise = x : uniqueList xs
+
 ```
 
 # Exercise 12 
@@ -69,6 +87,8 @@ You should now be able to define set equality as follows:
 setEquality :: (Eq a) => [a] -> [a] -> Bool
 setEquality xs ys = subset xs ys && subset ys xs
 ``` 
+setEquality :: (Eq a) => [a] -> [a] -> Bool
+setEquality xs ys = subset xs ys && subset ys xs
 ```
 
 # Exercise 13 
@@ -76,4 +96,6 @@ Write a function for set intersection, called myIntersection’. Do not worry
 about removing duplication: that is handled in the function myIntersection, already included
 in your Haskell file.
 ```
+myIntersection :: (Eq a) => [a] -> [a] -> [a]
+myIntersection xs ys = uniqueList (myIntersection' xs ys)
 ```
