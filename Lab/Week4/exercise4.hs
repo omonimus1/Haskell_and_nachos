@@ -1,88 +1,113 @@
+{- Extra functions needed -}
+subset :: (Eq a) => [a] -> [a] -> Bool
+subset [] _ = True
+subset (x:xs) ys 
+        | elem x ys = subset xs ys
+        | otherwise = False
+
+setEqual2 :: (Eq a) => [a] -> [a] -> Bool
+setEqual2 xs ys = subset xs ys && subset ys xs
+
+duplicateFree :: (Eq a) => [a] -> [a]
+duplicateFree [] = []
+duplicateFree (x:xs)
+        | elem x xs = duplicateFree xs
+        | otherwise = x : duplicateFree xs 
+
+
 elemAt :: Int -> [a] -> a
 elemAt n [] = error "Not enough in list"
 elemAt 1 (x:xs) = x
 elemAt n (x:xs) = elemAt (n-1) xs
 
-{-
-insertAt2 :: Int -> a -> [a] -> [a]
-insertAt2 1 x ys = 
-insertAt2 n x (y:ys) = 
--}
+insertAt2 :: Int -> a -> [a] -> [a] -- possibly unsafe
+insertAt2 1 x ys = x:ys
+insertAt2 n x (y:ys) = y : insertAt2 (n-1) x ys
 
-{-
 deleteAt :: Int -> [a] -> [a]
-deleteAt n [] = 
-deleteAt 1 (x:xs) = 
-deleteAt n (x:xs) = 
--}
+deleteAt _ [] = []
+deleteAt 1 (x:xs) = xs
+deleteAt n (x:xs) = x : deleteAt (n-1) xs
 
-{-
 takeUpTo :: Int -> [a] -> [a]
--}
+takeUpTo _ [] = []
+takeUpTo 1 (x:xs) = [x]
+takeUpTo n (x:xs) = x : takeUpTo (n-1) xs
 
-{-
 takeAfter :: Int -> [a] -> [a]
--}
+takeAfter _ [] = []
+takeAfter 1 (x:xs) = xs
+takeAfter n (x:xs) = takeAfter (n-1) xs
 
-{-
 takeBetween :: Int -> Int -> [a] -> [a]
--}
+takeBetween n m xs = takeAfter (m-n-1) (takeUpTo m xs)
 
-{-
 takeBetween2 :: Int -> Int -> [a] -> [a]
-takeBetween2 n m [] = 
-takeBetween2 1 m xs = 
-takeBetween2 n m (x:xs) = 
--}
+takeBetween2 _ _ [] = []
+takeBetween2 1 m xs = takeUpTo m xs
+takeBetween2 n m (x:xs) = takeBetween2 (n-1) (m-1) xs
+
+takeBetween3 :: Int -> Int -> [a] -> [a]
+takeBetween3 _ _ [] = []
+takeBetween3 0 1 (x:xs) = [x]
+takeBetween3 1 m (x:xs) = x : takeBetween3 0 (m-1) xs
+takeBetween3 0 m (x:xs) = x : takeBetween3 0 (m-1) xs
+takeBetween3 n m (x:xs) = takeBetween3 (n-1) (m-1) xs
 
 
 
 
 
 
-{-
+
 allFst :: [(a,b)] -> [a]
+allFst [] = []
+allFst (x:xs) = fst x : allFst xs
+
 
 allSnd :: [(a,b)] -> [b]
+allSnd [] = []
+allSnd (x:xs) = snd x : allSnd xs
 
 allFstMap :: [(a,b)] -> [a]
+allFstMap = map fst
 
 allSndMap :: [(a,b)] -> [b]
+allSndMap = map snd
 
--}
 
-{-
+
 allDifferent :: (Eq a) => [a] -> Bool
-allDifferent [] =
+allDifferent [] = True
 allDifferent (x:xs)
-	|
-	|
--}
+        | elem x xs = False 
+        | otherwise = allDifferent xs
 
-{- 
+
+
 isFn :: (Eq a, Eq b) => [(a,b)] -> [a] -> [b] -> Bool
-isFn fs xs ys =   &&     && 
--}
+isFn fs xs ys = setEqual2 xs (allFst fs) && allDifferent (allFst (duplicateFree fs))  && subset (allSnd fs) ys 
 
-{- 
-mapTo :: (Eq a,Eq b) => [(a,b)] -> b -> [a]
-mapTo [] y  = 
-mapTo (x:xs) y
-	|
-	|
--}
 
-{- 
-isInjection :: (Eq a, Eq b) => [(a,b)] -> [a] -> [b] -> Bool
--}
+mapTo :: (Eq a, Eq b) => [(a,b)] -> b -> [a]
+mapTo [] y = []
+mapTo (x:xs) y 
+        | y == snd x = fst x : mapTo xs y 
+        | otherwise = mapTo xs y
 
-{- 
+forAllMapFilter :: (a -> Bool) -> [a] -> Bool -- from week 2, used below. Any forAll would work.
+forAllMapFilter f xs = length (filter (==True) (map f xs)) == length xs
+
+isInjection :: (Eq a,Eq b) => [(a,b)] -> [a] -> [b] -> Bool
+isInjection fs xs ys = forAllMapFilter (<=1) (map length (map duplicateFree (map (mapTo fs) ys)))
+
+ 
 isSurjection :: (Eq a, Eq b) => [(a,b)] -> [a] -> [b] -> Bool
--}
+isSurjection fs xs ys = subset ys (allSnd fs) -- is the codomain a subset of the things mapped to?
 
-{- 
+ 
 isBijection :: (Eq a, Eq b) => [(a,b)] -> [a] -> [b] -> Bool
--}
+isBijection fs xs ys = isInjection fs xs ys && isSurjection fs xs ys
 
 f0 = [(1,2),(2,3),(3,4),(4,3)]
 x0 = [1..4]
@@ -128,3 +153,18 @@ y9 = [True, False]
 f10 = [('1',-37),('2',-36),('3',-35),('4',-34),('5',-33),('6',-32),('7',-31),('8',-30),('9',-29),(':',-28),(';',-27),('<',-26),('=',-25),('>',-24),('?',-23),('@',-22),('A',-21),('B',-20),('C',-19),('D',-18),('E',-17),('F',-16),('G',-15),('H',-14),('I',-13),('J',-12),('K',-11),('L',-10),('M',-9),('N',-8),('O',-7),('P',-6),('Q',-5),('R',-4),('S',-3),('T',-2),('U',-1),('V',0),('W',1),('X',2),('Y',3),('Z',4),('[',5),('\\',6),(']',7),('^',8),('_',9),('`',10),('a',11),('b',12),('c',13),('d',14),('e',15),('f',16),('g',17),('h',18),('i',19),('j',20),('k',21),('l',22),('m',23),('n',24),('o',25),('p',26),('q',27),('r',28),('s',29),('t',30),('u',31),('v',32),('w',33),('x',34),('y',35),('z',36)]
 x10 = ['1'..'z']
 y10 = [-37..37]
+
+
+{- Information about the functions:
+f0: function, not injection, not surjection, (not bijection)
+f1: function, not injection, not surjection, (not bijection)
+f2: not function
+f3: function, injection, surjection, bijection
+f4: not function
+f5: function, injection, not surjection, (not bijection)
+f6: function, not injection, not surjection, (not bijection)
+f7: function, injection, surjection, bijection
+f8: function, not injection, surjection, (not bijection)
+f9: function, injection, surjection, bijection
+f10: function, injection, not surjeciton, (not bijection)
+-}
